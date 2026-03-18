@@ -73,7 +73,24 @@ if (contactForm) {
       const btn = contactForm.querySelector('button[type="submit"]');
       btn.textContent = 'Sending...';
       btn.disabled = true;
-      contactForm.submit();
+      const formData = new FormData(contactForm);
+      fetch(contactForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      }).then(response => {
+        if (response.ok) {
+          contactForm.innerHTML = '<div style="text-align:center;padding:40px 20px;"><h3 style="margin-bottom:12px;">Thank You!</h3><p>Your case review request has been submitted. We\'ll be in touch shortly.</p></div>';
+        } else {
+          btn.textContent = 'Submit — It\'s Free & Confidential';
+          btn.disabled = false;
+          alert('Something went wrong. Please try again or call us directly.');
+        }
+      }).catch(() => {
+        btn.textContent = 'Submit — It\'s Free & Confidential';
+        btn.disabled = false;
+        alert('Something went wrong. Please try again or call us directly.');
+      });
     }
   });
 

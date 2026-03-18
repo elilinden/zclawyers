@@ -929,6 +929,7 @@ a.team-card {
   justify-content: center;
   margin: 0 auto 20px;
   object-fit: cover;
+  object-position: top;
 }
 
 .page-hero-photo {
