@@ -158,15 +158,13 @@ if (langSwitcher) {
   const langCurrent = langSwitcher.querySelector('.lang-current');
   const langLabels = {
     en: 'EN',
-    es: 'ES',
-    fa: 'FA'
+    es: 'ES'
   };
   const preferredLocaleKey = 'preferredLocale';
 
   function getDocumentLocale() {
     const lang = (document.documentElement.lang || '').toLowerCase();
     if (lang.startsWith('es')) return 'es';
-    if (lang.startsWith('fa')) return 'fa';
     return 'en';
   }
 
@@ -176,7 +174,6 @@ if (langSwitcher) {
     try {
       const url = new URL(link.getAttribute('href'), window.location.href);
       const segments = url.pathname.split('/').filter(Boolean);
-      if (segments.includes('fa')) return 'fa';
       if (segments.includes('es')) return 'es';
       return 'en';
     } catch {

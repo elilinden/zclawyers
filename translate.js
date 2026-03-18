@@ -2,7 +2,7 @@
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
     pageLanguage: 'en',
-    includedLanguages: 'en,es,fa',
+    includedLanguages: 'en,es',
     autoDisplay: false
   }, 'google_translate_element');
 }
@@ -17,7 +17,7 @@ function googleTranslateElementInit() {
   const currentLabel = switcher.querySelector('.lang-current');
   const options = switcher.querySelectorAll('.lang-option');
 
-  const langLabels = { en: 'EN', es: 'ES', fa: 'FA' };
+  const langLabels = { en: 'EN', es: 'ES' };
 
   // Toggle menu with ARIA
   btn.addEventListener('click', (e) => {
@@ -47,15 +47,6 @@ function googleTranslateElementInit() {
       option.classList.add('active');
       currentLabel.textContent = langLabels[lang];
       switcher.classList.remove('open');
-
-      // Handle RTL for Farsi
-      if (lang === 'fa') {
-        document.documentElement.setAttribute('dir', 'rtl');
-        document.body.classList.add('rtl');
-      } else {
-        document.documentElement.setAttribute('dir', 'ltr');
-        document.body.classList.remove('rtl');
-      }
 
       // Trigger Google Translate
       if (lang === 'en') {
@@ -101,10 +92,6 @@ function googleTranslateElementInit() {
       options.forEach(o => {
         o.classList.toggle('active', o.dataset.lang === lang);
       });
-      if (lang === 'fa') {
-        document.documentElement.setAttribute('dir', 'rtl');
-        document.body.classList.add('rtl');
-      }
     }
   };
   checkTranslation();
