@@ -212,7 +212,6 @@ button, input, select, textarea {
 .nav-logo-img {
   height: 75px;
   width: auto;
-  filter: brightness(0) invert(1);
 }
 
 .navbar.scrolled .nav-logo-img {
