@@ -12,21 +12,36 @@ window.addEventListener('scroll', () => {
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 
+// Create overlay for closing menu by tapping outside
+const navOverlay = document.createElement('div');
+navOverlay.className = 'nav-overlay';
+navOverlay.setAttribute('aria-hidden', 'true');
+document.body.appendChild(navOverlay);
+
+function closeMobileMenu() {
+  navMenu.classList.remove('open');
+  navToggle.classList.remove('active');
+  navOverlay.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+  navMenu.setAttribute('aria-hidden', 'true');
+  navOverlay.setAttribute('aria-hidden', 'true');
+}
+
 navToggle.addEventListener('click', () => {
   const isOpen = navMenu.classList.toggle('open');
   navToggle.classList.toggle('active');
+  navOverlay.classList.toggle('open');
   navToggle.setAttribute('aria-expanded', isOpen);
   navMenu.setAttribute('aria-hidden', !isOpen);
+  navOverlay.setAttribute('aria-hidden', !isOpen);
 });
+
+// Close menu when tapping the overlay (outside the drawer)
+navOverlay.addEventListener('click', closeMobileMenu);
 
 // Close mobile menu on link click (skip dropdown triggers)
 document.querySelectorAll('.nav-menu a:not(.dropdown-trigger)').forEach(link => {
-  link.addEventListener('click', () => {
-    navMenu.classList.remove('open');
-    navToggle.classList.remove('active');
-    navToggle.setAttribute('aria-expanded', 'false');
-    navMenu.setAttribute('aria-hidden', 'true');
-  });
+  link.addEventListener('click', closeMobileMenu);
 });
 
 // Mobile dropdown toggle with ARIA
