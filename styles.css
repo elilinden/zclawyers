@@ -1857,6 +1857,7 @@ a.practice-card:hover h3 {
     transition: right 0.3s ease;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
+    z-index: 1001;
   }
 
   .nav-menu.open {
