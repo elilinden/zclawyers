@@ -206,7 +206,8 @@ button, input, select, textarea {
 }
 
 .nav-logo {
-  display: none;
+  display: flex;
+  align-items: center;
 }
 
 .nav-logo-img {
@@ -222,7 +223,7 @@ button, input, select, textarea {
 .hero-logo {
   display: block;
   margin: 0 auto 24px;
-  height: 180px;
+  height: 220px;
   width: auto;
   filter: brightness(0) invert(1);
 }
@@ -256,6 +257,10 @@ button, input, select, textarea {
 }
 
 .nav-dropdown:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown.open .dropdown-arrow {
   transform: rotate(180deg);
 }
 
@@ -648,14 +653,14 @@ body {
   font-family: var(--font-display);
   font-size: 1.2rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.42);
   letter-spacing: 1px;
   transition: color 0.3s;
   text-decoration: none;
 }
 
 .trust-logo:hover {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* ===== SECTION LABELS ===== */
@@ -831,6 +836,10 @@ body {
   transition: all 0.3s ease;
 }
 
+.result-card {
+  container-type: inline-size;
+}
+
 .result-card:hover {
   border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-4px);
@@ -859,12 +868,13 @@ body {
 .result-amount {
   display: block;
   font-family: var(--font-display);
-  font-size: 2.4rem;
+  font-size: clamp(2.25rem, 7vw, 3.5rem);
+  font-size: 12cqi;
   font-weight: 700;
   color: var(--white);
   margin-bottom: 8px;
   padding: 0 4px;
-  overflow: visible;
+  white-space: nowrap;
 }
 
 .result-card.featured .result-amount {
@@ -916,8 +926,8 @@ a.team-card {
 }
 
 .team-avatar {
-  width: 80px;
-  height: 80px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--gold), var(--gold-light));
   color: var(--navy);
@@ -1849,6 +1859,10 @@ a.practice-card:hover h3 {
 }
 
 @media (max-width: 968px) {
+  .nav-logo {
+    display: none;
+  }
+
   .nav-toggle {
     display: flex;
   }
@@ -1859,6 +1873,7 @@ a.practice-card:hover h3 {
     right: -100%;
     width: 300px;
     height: 100vh;
+    height: 100svh;
     background: var(--navy);
     flex-direction: column;
     align-items: flex-start;
@@ -2123,8 +2138,8 @@ a.practice-card:hover h3 {
 
   /* Team cards smaller avatar */
   .team-avatar {
-    width: 80px;
-    height: 80px;
+    width: 110px;
+    height: 110px;
     font-size: 1.3rem;
   }
 
@@ -2143,7 +2158,7 @@ a.practice-card:hover h3 {
   }
 
   /* Blog cards */
-  .blog-card {
+  .blog-card-body {
     padding: 20px;
   }
 

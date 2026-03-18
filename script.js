@@ -13,6 +13,17 @@ window.addEventListener('scroll', syncNavbarScrollState, { passive: true });
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 let navOverlay = null;
+const navDropdownTriggers = Array.from(document.querySelectorAll('.dropdown-trigger'));
+
+function resetMobileDropdowns() {
+  document.querySelectorAll('.nav-dropdown.open').forEach(dropdown => {
+    dropdown.classList.remove('open');
+  });
+
+  navDropdownTriggers.forEach(trigger => {
+    trigger.setAttribute('aria-expanded', 'false');
+  });
+}
 
 function closeMobileMenu() {
   if (!navToggle || !navMenu || !navOverlay) return;
@@ -22,6 +33,7 @@ function closeMobileMenu() {
   navToggle.setAttribute('aria-expanded', 'false');
   navMenu.setAttribute('aria-hidden', 'true');
   navOverlay.setAttribute('aria-hidden', 'true');
+  resetMobileDropdowns();
 }
 
 if (navToggle && navMenu) {
@@ -37,9 +49,18 @@ if (navToggle && navMenu) {
     navToggle.setAttribute('aria-expanded', String(isOpen));
     navMenu.setAttribute('aria-hidden', String(!isOpen));
     navOverlay.setAttribute('aria-hidden', String(!isOpen));
+
+    if (!isOpen) {
+      resetMobileDropdowns();
+    }
   });
 
   navOverlay.addEventListener('click', closeMobileMenu);
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 968) {
+      closeMobileMenu();
+    }
+  });
 }
 
 // Close mobile menu on link click (skip dropdown triggers)
@@ -60,105 +81,154 @@ document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
 });
 
 // Form validation and submission
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-  contactForm.querySelectorAll('input, select, textarea').forEach(field => {
+const pageLocale = (document.documentElement.lang || '').toLowerCase().startsWith('es') ? 'es' : 'en';
+const formCopy = {
+  en: {
+    sending: 'Sending...',
+    required: 'Please complete this field.',
+    invalidEmail: 'Please enter a valid email address.',
+    genericError: 'Something went wrong. Please try again or call us directly.',
+    caseReviewSuccessTitle: 'Thank You!',
+    caseReviewSuccessBody: 'Your case review request has been submitted. We\'ll be in touch shortly.',
+    dsarSuccessTitle: 'Request Received',
+    dsarSuccessBody: 'Your privacy request has been submitted. We\'ll follow up shortly.'
+  },
+  es: {
+    sending: 'Enviando...',
+    required: 'Por favor complete este campo.',
+    invalidEmail: 'Por favor ingrese un correo electr\u00f3nico v\u00e1lido.',
+    genericError: 'Algo sali\u00f3 mal. Intente de nuevo o ll\u00e1menos directamente.',
+    caseReviewSuccessTitle: '\u00a1Gracias!',
+    caseReviewSuccessBody: 'Su solicitud de revisi\u00f3n de caso fue enviada. Nos comunicaremos con usted pronto.',
+    dsarSuccessTitle: 'Solicitud Recibida',
+    dsarSuccessBody: 'Su solicitud de privacidad fue enviada. Nos comunicaremos con usted pronto.'
+  }
+};
+
+function getFormMessages(form) {
+  const localeMessages = formCopy[pageLocale] || formCopy.en;
+
+  if (form.classList.contains('dsar-form')) {
+    return {
+      ...localeMessages,
+      successTitle: localeMessages.dsarSuccessTitle,
+      successBody: localeMessages.dsarSuccessBody
+    };
+  }
+
+  return {
+    ...localeMessages,
+    successTitle: localeMessages.caseReviewSuccessTitle,
+    successBody: localeMessages.caseReviewSuccessBody
+  };
+}
+
+function clearFieldError(field) {
+  const group = field.closest('.form-group');
+  if (!group) return;
+  group.classList.remove('error');
+  const existing = group.querySelector('.form-error-msg');
+  if (existing) existing.remove();
+  field.removeAttribute('aria-invalid');
+  field.removeAttribute('aria-describedby');
+}
+
+function showFieldError(field, message) {
+  const group = field.closest('.form-group');
+  if (!group) return;
+
+  clearFieldError(field);
+  group.classList.add('error');
+
+  const errorEl = document.createElement('span');
+  errorEl.className = 'form-error-msg';
+  const fieldKey = field.id || field.name || 'field';
+  const errorId = `${fieldKey}-error`;
+  errorEl.id = errorId;
+  errorEl.textContent = message;
+  group.appendChild(errorEl);
+
+  field.setAttribute('aria-invalid', 'true');
+  field.setAttribute('aria-describedby', errorId);
+}
+
+function validateForm(form) {
+  let isValid = true;
+  const messages = getFormMessages(form);
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  form.querySelectorAll('input, select, textarea').forEach(field => {
+    if (field.disabled || field.type === 'hidden') return;
+
+    clearFieldError(field);
+
+    const value = typeof field.value === 'string' ? field.value.trim() : '';
+    const isRequired = field.hasAttribute('required');
+    const isEmailField = field.type === 'email' || field.name === 'email';
+
+    if (isRequired && !value) {
+      showFieldError(field, messages.required);
+      isValid = false;
+      return;
+    }
+
+    if (value && isEmailField && !emailPattern.test(value)) {
+      showFieldError(field, messages.invalidEmail);
+      isValid = false;
+    }
+  });
+
+  if (!isValid) {
+    const firstError = form.querySelector('[aria-invalid="true"]');
+    if (firstError) firstError.focus();
+  }
+
+  return isValid;
+}
+
+document.querySelectorAll('form.contact-form').forEach(form => {
+  form.querySelectorAll('input, select, textarea').forEach(field => {
+    if (field.type === 'hidden') return;
     field.addEventListener('input', () => clearFieldError(field));
     field.addEventListener('change', () => clearFieldError(field));
   });
 
-  contactForm.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      const btn = contactForm.querySelector('button[type="submit"]');
-      btn.textContent = 'Sending...';
+    if (!validateForm(form)) return;
+
+    const btn = form.querySelector('button[type="submit"]');
+    const messages = getFormMessages(form);
+    const defaultButtonText = btn ? (btn.dataset.defaultText || btn.textContent.trim()) : '';
+
+    if (btn) {
+      btn.dataset.defaultText = defaultButtonText;
+      btn.textContent = messages.sending;
       btn.disabled = true;
-      const formData = new FormData(contactForm);
-      fetch(contactForm.action, {
+    }
+
+    try {
+      const response = await fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
         method: 'POST',
-        body: formData,
+        body: new FormData(form),
         headers: { 'Accept': 'application/json' }
-      }).then(response => {
-        if (response.ok) {
-          contactForm.innerHTML = '<div style="text-align:center;padding:40px 20px;"><h3 style="margin-bottom:12px;">Thank You!</h3><p>Your case review request has been submitted. We\'ll be in touch shortly.</p></div>';
-        } else {
-          btn.textContent = 'Submit — It\'s Free & Confidential';
-          btn.disabled = false;
-          alert('Something went wrong. Please try again or call us directly.');
-        }
-      }).catch(() => {
-        btn.textContent = 'Submit — It\'s Free & Confidential';
-        btn.disabled = false;
-        alert('Something went wrong. Please try again or call us directly.');
       });
+
+      if (!response.ok) {
+        throw new Error('Form submission failed');
+      }
+
+      form.innerHTML = `<div style="text-align:center;padding:40px 20px;"><h3 style="margin-bottom:12px;">${messages.successTitle}</h3><p>${messages.successBody}</p></div>`;
+    } catch {
+      if (btn) {
+        btn.textContent = defaultButtonText;
+        btn.disabled = false;
+      }
+
+      alert(messages.genericError);
     }
   });
-
-  function validateForm() {
-    let isValid = true;
-
-    const name = contactForm.querySelector('#name');
-    if (name && !name.value.trim()) {
-      showFieldError(name, 'Please enter your full name.');
-      isValid = false;
-    }
-
-    const phone = contactForm.querySelector('#phone');
-    if (phone && !phone.value.trim()) {
-      showFieldError(phone, 'Please enter your phone number.');
-      isValid = false;
-    }
-
-    const email = contactForm.querySelector('#email');
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email) {
-      if (!email.value.trim()) {
-        showFieldError(email, 'Please enter your email address.');
-        isValid = false;
-      } else if (!emailPattern.test(email.value.trim())) {
-        showFieldError(email, 'Please enter a valid email address.');
-        isValid = false;
-      }
-    }
-
-    const message = contactForm.querySelector('#message');
-    if (message && !message.value.trim()) {
-      showFieldError(message, 'Please describe your situation.');
-      isValid = false;
-    }
-
-    if (!isValid) {
-      const firstError = contactForm.querySelector('[aria-invalid="true"]');
-      if (firstError) firstError.focus();
-    }
-
-    return isValid;
-  }
-
-  function showFieldError(field, message) {
-    const group = field.closest('.form-group');
-    clearFieldError(field);
-    group.classList.add('error');
-    const errorEl = document.createElement('span');
-    errorEl.className = 'form-error-msg';
-    const errorId = field.id + '-error';
-    errorEl.id = errorId;
-    errorEl.textContent = message;
-    group.appendChild(errorEl);
-    field.setAttribute('aria-invalid', 'true');
-    field.setAttribute('aria-describedby', errorId);
-  }
-
-  function clearFieldError(field) {
-    const group = field.closest('.form-group');
-    if (!group) return;
-    group.classList.remove('error');
-    const existing = group.querySelector('.form-error-msg');
-    if (existing) existing.remove();
-    field.removeAttribute('aria-invalid');
-    field.removeAttribute('aria-describedby');
-  }
-}
+});
 
 // Language switcher toggle
 const langSwitcher = document.getElementById('langSwitcher');
@@ -184,7 +254,7 @@ if (langSwitcher) {
     try {
       const url = new URL(link.getAttribute('href'), window.location.href);
       const segments = url.pathname.split('/').filter(Boolean);
-      if (segments.includes('es')) return 'es';
+      if (segments[0] === 'es') return 'es';
       return 'en';
     } catch {
       return null;
@@ -284,7 +354,7 @@ function scheduleNonCriticalWork(task, timeout = 1200) {
 }
 
 function initRevealAnimations() {
-  const revealTargets = document.querySelectorAll('.practice-card, .result-card, .team-card, .stat-card, .about-text, .contact-info, .contact-form-wrapper');
+  const revealTargets = document.querySelectorAll('.practice-card, .result-card, .team-card, .stat-card, .about-text, .contact-info, .contact-form-wrapper, .process-step');
   const sectionTargets = document.querySelectorAll('section:not(.hero)');
 
   if (!('IntersectionObserver' in window)) {
