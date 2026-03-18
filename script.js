@@ -117,6 +117,11 @@ if (contactForm) {
       isValid = false;
     }
 
+    if (!isValid) {
+      const firstError = contactForm.querySelector('[aria-invalid="true"]');
+      if (firstError) firstError.focus();
+    }
+
     return isValid;
   }
 
@@ -126,8 +131,12 @@ if (contactForm) {
     group.classList.add('error');
     const errorEl = document.createElement('span');
     errorEl.className = 'form-error-msg';
+    const errorId = field.id + '-error';
+    errorEl.id = errorId;
     errorEl.textContent = message;
     group.appendChild(errorEl);
+    field.setAttribute('aria-invalid', 'true');
+    field.setAttribute('aria-describedby', errorId);
   }
 
   function clearFieldError(field) {
@@ -136,6 +145,8 @@ if (contactForm) {
     group.classList.remove('error');
     const existing = group.querySelector('.form-error-msg');
     if (existing) existing.remove();
+    field.removeAttribute('aria-invalid');
+    field.removeAttribute('aria-describedby');
   }
 }
 
@@ -223,7 +234,9 @@ if (langSwitcher) {
   if (redirectedToPreferredLocale) {
     // Skip UI updates and storage writes while navigation is in flight.
   } else {
-    writePreferredLocale(currentLocale);
+    if (!preferredLocale || preferredLocale === currentLocale) {
+      writePreferredLocale(currentLocale);
+    }
     syncLanguageUi(currentLocale);
 
     langBtn.addEventListener('click', (e) => {
