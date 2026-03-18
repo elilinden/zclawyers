@@ -896,6 +896,10 @@ body {
   gap: 24px;
 }
 
+a.team-card {
+  display: block;
+}
+
 .team-card {
   text-align: center;
   padding: 40px 20px;
