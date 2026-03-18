@@ -350,6 +350,33 @@ button, input, select, textarea {
   border-radius: 2px;
 }
 
+.nav-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.nav-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.nav-overlay.open {
+  display: block;
+}
+
 /* ===== LANGUAGE SWITCHER ===== */
 .lang-switcher {
   position: relative;
