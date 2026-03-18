@@ -872,6 +872,8 @@ body {
   font-weight: 700;
   color: var(--white);
   margin-bottom: 8px;
+  padding: 0 4px;
+  overflow: visible;
 }
 
 .result-card.featured .result-amount {
@@ -935,6 +937,16 @@ a.team-card {
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
+  object-fit: cover;
+}
+
+.page-hero-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 24px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
 }
 
 .team-card h3 {
