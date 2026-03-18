@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Read(//opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/bin/**)",
+      "Read(//Library/Frameworks/Python.framework/Versions/3.12/bin/**)",
+      "Read(//Users/elilinden/.pyenv/shims/**)",
+      "Bash(curl -sL \"https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap\" -H \"User-Agent: Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36\" -o google-fonts.css)",
+      "Bash(curl -sL \"https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIq15j8eUY.woff2\" -o inter.woff2)",
+      "Bash(curl -sL \"https://fonts.gstatic.com/s/playfairdisplay/v40/nuFiD-vYSZviVYUb_rj3ij__anPXPT7Sh2E-.woff2\" -o playfair-display.woff2)",
+      "Bash(ls -la *.woff2)",
+      "Bash(python3 -c \"from PIL import Image; print\\(''Pillow available''\\)\")",
+      "Bash(/opt/homebrew/bin/python3 -c \"from PIL import Image; print\\(''Pillow available''\\)\")",
+      "Bash(pip3 install:*)",
+      "WebSearch",
+      "Bash(grep -l \"translate.js\\\\|google_translate_element\" /Users/elilinden/Desktop/website/*.html /Users/elilinden/Desktop/website/blog/*.html)"
+    ]
+  }
+}
