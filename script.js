@@ -1,24 +1,21 @@
 // Navbar scroll effect
 const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 50) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
-});
+
+function syncNavbarScrollState() {
+  if (!navbar) return;
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+}
+
+syncNavbarScrollState();
+window.addEventListener('scroll', syncNavbarScrollState, { passive: true });
 
 // Mobile menu toggle with ARIA
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
-
-// Create overlay for closing menu by tapping outside
-const navOverlay = document.createElement('div');
-navOverlay.className = 'nav-overlay';
-navOverlay.setAttribute('aria-hidden', 'true');
-document.body.appendChild(navOverlay);
+let navOverlay = null;
 
 function closeMobileMenu() {
+  if (!navToggle || !navMenu || !navOverlay) return;
   navMenu.classList.remove('open');
   navToggle.classList.remove('active');
   navOverlay.classList.remove('open');
@@ -27,17 +24,23 @@ function closeMobileMenu() {
   navOverlay.setAttribute('aria-hidden', 'true');
 }
 
-navToggle.addEventListener('click', () => {
-  const isOpen = navMenu.classList.toggle('open');
-  navToggle.classList.toggle('active');
-  navOverlay.classList.toggle('open');
-  navToggle.setAttribute('aria-expanded', isOpen);
-  navMenu.setAttribute('aria-hidden', !isOpen);
-  navOverlay.setAttribute('aria-hidden', !isOpen);
-});
+if (navToggle && navMenu) {
+  navOverlay = document.createElement('div');
+  navOverlay.className = 'nav-overlay';
+  navOverlay.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(navOverlay);
 
-// Close menu when tapping the overlay (outside the drawer)
-navOverlay.addEventListener('click', closeMobileMenu);
+  navToggle.addEventListener('click', () => {
+    const isOpen = navMenu.classList.toggle('open');
+    navToggle.classList.toggle('active');
+    navOverlay.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', String(isOpen));
+    navMenu.setAttribute('aria-hidden', String(!isOpen));
+    navOverlay.setAttribute('aria-hidden', String(!isOpen));
+  });
+
+  navOverlay.addEventListener('click', closeMobileMenu);
+}
 
 // Close mobile menu on link click (skip dropdown triggers)
 document.querySelectorAll('.nav-menu a:not(.dropdown-trigger)').forEach(link => {
@@ -51,44 +54,14 @@ document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
       e.preventDefault();
       const dropdown = trigger.closest('.nav-dropdown');
       const isOpen = dropdown.classList.toggle('open');
-      trigger.setAttribute('aria-expanded', isOpen);
+      trigger.setAttribute('aria-expanded', String(isOpen));
     }
   });
-});
-
-// Scroll animations
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, observerOptions);
-
-// Add fade-in class with staggered delays
-document.querySelectorAll('.practice-card, .result-card, .team-card, .stat-card, .about-text, .contact-info, .contact-form-wrapper').forEach(el => {
-  el.classList.add('fade-in');
-
-  // Calculate stagger index among siblings of same class
-  const parent = el.parentElement;
-  const className = el.classList[0];
-  const siblings = parent.querySelectorAll('.' + className);
-  const index = Array.from(siblings).indexOf(el);
-  const delay = Math.min(index * 100, 600);
-  el.style.setProperty('--stagger-delay', delay + 'ms');
-
-  observer.observe(el);
 });
 
 // Form validation and submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  // Clear error on input
   contactForm.querySelectorAll('input, select, textarea').forEach(field => {
     field.addEventListener('input', () => clearFieldError(field));
     field.addEventListener('change', () => clearFieldError(field));
@@ -166,36 +139,212 @@ if (contactForm) {
   }
 }
 
-// Smooth reveal for sections (skip hero which should be visible immediately)
-document.querySelectorAll('section:not(.hero)').forEach(section => {
-  section.style.opacity = '0';
-  section.style.transform = 'translateY(20px)';
-  section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-});
+// Language switcher toggle
+const langSwitcher = document.getElementById('langSwitcher');
+if (langSwitcher) {
+  const langBtn = langSwitcher.querySelector('.lang-btn');
+  const langOptions = Array.from(langSwitcher.querySelectorAll('.lang-option'));
+  const langCurrent = langSwitcher.querySelector('.lang-current');
+  const langLabels = {
+    en: 'EN',
+    es: 'ES',
+    fa: 'FA'
+  };
+  const preferredLocaleKey = 'preferredLocale';
 
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
+  function getDocumentLocale() {
+    const lang = (document.documentElement.lang || '').toLowerCase();
+    if (lang.startsWith('es')) return 'es';
+    if (lang.startsWith('fa')) return 'fa';
+    return 'en';
+  }
+
+  function getLocaleFromLink(link) {
+    if (!link) return null;
+
+    try {
+      const url = new URL(link.getAttribute('href'), window.location.href);
+      const segments = url.pathname.split('/').filter(Boolean);
+      if (segments.includes('fa')) return 'fa';
+      if (segments.includes('es')) return 'es';
+      return 'en';
+    } catch {
+      return null;
     }
+  }
+
+  function readPreferredLocale() {
+    try {
+      return window.localStorage.getItem(preferredLocaleKey);
+    } catch {
+      return null;
+    }
+  }
+
+  function writePreferredLocale(locale) {
+    try {
+      window.localStorage.setItem(preferredLocaleKey, locale);
+    } catch {
+      // Ignore storage access failures and continue with current page locale.
+    }
+  }
+
+  function syncLanguageUi(locale) {
+    if (langCurrent) {
+      langCurrent.textContent = langLabels[locale] || locale.toUpperCase();
+    }
+
+    langOptions.forEach(option => {
+      option.classList.toggle('active', getLocaleFromLink(option) === locale);
+    });
+  }
+
+  const currentLocale = getDocumentLocale();
+  const preferredLocale = readPreferredLocale();
+  const localeOptions = new Map(
+    langOptions
+      .map(option => [getLocaleFromLink(option), option])
+      .filter(([locale]) => Boolean(locale))
+  );
+  let redirectedToPreferredLocale = false;
+
+  if (preferredLocale && preferredLocale !== currentLocale) {
+    const preferredOption = localeOptions.get(preferredLocale);
+
+    if (preferredOption) {
+      const targetUrl = new URL(preferredOption.getAttribute('href'), window.location.href);
+      if (targetUrl.href !== window.location.href) {
+        redirectedToPreferredLocale = true;
+        window.location.replace(targetUrl.href);
+      }
+    }
+  }
+
+  if (redirectedToPreferredLocale) {
+    // Skip UI updates and storage writes while navigation is in flight.
+  } else {
+    writePreferredLocale(currentLocale);
+    syncLanguageUi(currentLocale);
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = langSwitcher.classList.toggle('open');
+      langBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    document.addEventListener('click', () => {
+      langSwitcher.classList.remove('open');
+      langBtn.setAttribute('aria-expanded', 'false');
+    });
+
+    langSwitcher.querySelector('.lang-menu').addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    langOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const locale = getLocaleFromLink(option);
+        if (locale) {
+          writePreferredLocale(locale);
+        }
+      });
+    });
+  }
+}
+
+function scheduleNonCriticalWork(task, timeout = 1200) {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(task, { timeout });
+  } else {
+    window.setTimeout(() => task({
+      didTimeout: false,
+      timeRemaining: () => 0
+    }), 1);
+  }
+}
+
+function initRevealAnimations() {
+  const revealTargets = document.querySelectorAll('.practice-card, .result-card, .team-card, .stat-card, .about-text, .contact-info, .contact-form-wrapper');
+  const sectionTargets = document.querySelectorAll('section:not(.hero)');
+
+  if (!('IntersectionObserver' in window)) {
+    revealTargets.forEach(el => {
+      el.classList.add('fade-in', 'visible');
+      el.style.setProperty('--stagger-delay', '0ms');
+    });
+
+    sectionTargets.forEach(section => {
+      section.classList.add('section-reveal', 'visible');
+    });
+    return;
+  }
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
   });
-}, { threshold: 0.05 });
 
-document.querySelectorAll('section:not(.hero)').forEach(section => {
-  sectionObserver.observe(section);
-});
+  const staggerGroups = new WeakMap();
+  revealTargets.forEach(el => {
+    el.classList.add('fade-in');
 
-// Number counting animation
+    const parent = el.parentElement || document.body;
+    const primaryClass = Array.from(el.classList).find(className => className !== 'fade-in') || 'default';
+    let groupCounts = staggerGroups.get(parent);
+
+    if (!groupCounts) {
+      groupCounts = new Map();
+      staggerGroups.set(parent, groupCounts);
+    }
+
+    const index = groupCounts.get(primaryClass) || 0;
+    groupCounts.set(primaryClass, index + 1);
+    el.style.setProperty('--stagger-delay', `${Math.min(index * 100, 600)}ms`);
+    revealObserver.observe(el);
+  });
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        sectionObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  sectionTargets.forEach(section => {
+    section.classList.add('section-reveal');
+    sectionObserver.observe(section);
+  });
+}
+
 function animateStatNumbers() {
   const statNumbers = document.querySelectorAll('.stat-number');
   if (!statNumbers.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    statNumbers.forEach(el => {
+      if (!el.dataset.animated) {
+        el.dataset.animated = 'true';
+        countUp(el);
+      }
+    });
+    return;
+  }
 
   const statObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !entry.target.dataset.animated) {
         entry.target.dataset.animated = 'true';
         countUp(entry.target);
+        statObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.5 });
@@ -228,16 +377,19 @@ function countUp(element) {
 
   function formatNumber(num) {
     let formatted;
+
     if (hasDecimal) {
       formatted = num.toFixed(decimalPlaces);
     } else {
       formatted = Math.round(num).toString();
     }
+
     if (hasCommas) {
       const parts = formatted.split('.');
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       formatted = parts.join('.');
     }
+
     return prefix + formatted + suffix;
   }
 
@@ -257,57 +409,40 @@ function countUp(element) {
   requestAnimationFrame(tick);
 }
 
-animateStatNumbers();
-
-// Mobile sticky CTA - show after hero, hide near footer
-const mobileCta = document.getElementById('mobileCta');
-if (mobileCta) {
+function initMobileStickyCta() {
+  const mobileCta = document.getElementById('mobileCta');
   const heroSection = document.querySelector('.hero');
   const footer = document.querySelector('.footer');
 
-  if (heroSection && footer) {
-    const ctaObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.target === heroSection) {
-          if (!entry.isIntersecting) {
-            mobileCta.classList.add('visible');
-            mobileCta.classList.remove('hidden-for-footer');
-          } else {
-            mobileCta.classList.remove('visible');
-          }
-        }
-        if (entry.target === footer) {
-          if (entry.isIntersecting) {
-            mobileCta.classList.add('hidden-for-footer');
-          } else {
-            mobileCta.classList.remove('hidden-for-footer');
-          }
-        }
-      });
-    }, { threshold: 0.1 });
+  if (!mobileCta || !heroSection || !footer || !('IntersectionObserver' in window)) return;
 
-    ctaObserver.observe(heroSection);
-    ctaObserver.observe(footer);
-  }
+  const ctaObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.target === heroSection) {
+        if (!entry.isIntersecting) {
+          mobileCta.classList.add('visible');
+          mobileCta.classList.remove('hidden-for-footer');
+        } else {
+          mobileCta.classList.remove('visible');
+        }
+      }
+
+      if (entry.target === footer) {
+        if (entry.isIntersecting) {
+          mobileCta.classList.add('hidden-for-footer');
+        } else {
+          mobileCta.classList.remove('hidden-for-footer');
+        }
+      }
+    });
+  }, { threshold: 0.1 });
+
+  ctaObserver.observe(heroSection);
+  ctaObserver.observe(footer);
 }
 
-// Language switcher toggle
-const langSwitcher = document.getElementById('langSwitcher');
-if (langSwitcher) {
-  const langBtn = langSwitcher.querySelector('.lang-btn');
-
-  langBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = langSwitcher.classList.toggle('open');
-    langBtn.setAttribute('aria-expanded', isOpen);
-  });
-
-  document.addEventListener('click', () => {
-    langSwitcher.classList.remove('open');
-    langBtn.setAttribute('aria-expanded', 'false');
-  });
-
-  langSwitcher.querySelector('.lang-menu').addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
-}
+scheduleNonCriticalWork(() => {
+  initRevealAnimations();
+  animateStatNumbers();
+  initMobileStickyCta();
+});
