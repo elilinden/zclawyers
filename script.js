@@ -71,16 +71,9 @@ if (contactForm) {
     e.preventDefault();
     if (validateForm()) {
       const btn = contactForm.querySelector('button[type="submit"]');
-      const originalText = btn.textContent;
-      btn.textContent = 'Submitted! We\'ll be in touch.';
-      btn.style.background = '#22c55e';
-      btn.style.borderColor = '#22c55e';
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.style.background = '';
-        btn.style.borderColor = '';
-        contactForm.reset();
-      }, 3000);
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      contactForm.submit();
     }
   });
 
