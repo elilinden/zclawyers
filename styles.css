@@ -206,8 +206,7 @@ button, input, select, textarea {
 }
 
 .nav-logo {
-  display: flex;
-  align-items: center;
+  display: none;
 }
 
 .nav-logo-img {
@@ -218,6 +217,15 @@ button, input, select, textarea {
 
 .navbar.scrolled .nav-logo-img {
   height: 65px;
+}
+
+/* Centered hero logo */
+.hero-logo {
+  display: block;
+  margin: 0 auto 24px;
+  height: 180px;
+  width: auto;
+  filter: brightness(0) invert(1);
 }
 
 .logo-firm {
@@ -1990,6 +1998,10 @@ a.practice-card:hover h3 {
   .hero {
     min-height: 100svh; /* Use small viewport height for mobile browsers */
     padding-top: 70px;
+  }
+
+  .hero-logo {
+    height: 130px;
   }
 
   .hero-content {
