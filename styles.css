@@ -1909,7 +1909,9 @@ a.practice-card:hover h3 {
     font-size: 1rem;
   }
 
-  .dropdown-menu {
+  .dropdown-menu,
+  .nav-dropdown:hover .dropdown-menu,
+  .nav-dropdown:focus-within .dropdown-menu {
     position: static;
     transform: none;
     background: transparent;
@@ -1945,7 +1947,7 @@ a.practice-card:hover h3 {
 
   .nav-cta {
     margin-left: 0 !important;
-    margin-top: 16px;
+    margin-top: 24px;
     text-align: center;
   }
 }
