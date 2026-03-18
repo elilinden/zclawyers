@@ -211,13 +211,13 @@ button, input, select, textarea {
 }
 
 .nav-logo-img {
-  height: 50px;
+  height: 75px;
   width: auto;
   filter: brightness(0) invert(1);
 }
 
 .navbar.scrolled .nav-logo-img {
-  height: 44px;
+  height: 65px;
 }
 
 .logo-firm {
@@ -463,51 +463,6 @@ button, input, select, textarea {
   font-weight: 600;
 }
 
-/* RTL support for Farsi */
-body.rtl .nav-container {
-  flex-direction: row-reverse;
-}
-
-body.rtl .nav-menu {
-  flex-direction: row-reverse;
-}
-
-body.rtl .hero-content,
-body.rtl .section-title,
-body.rtl .section-label,
-body.rtl .section-subtitle {
-  direction: rtl;
-}
-
-body.rtl .about-text {
-  direction: rtl;
-  text-align: right;
-}
-
-body.rtl .contact-info {
-  direction: rtl;
-  text-align: right;
-}
-
-body.rtl .page-content .main-content {
-  direction: rtl;
-  text-align: right;
-}
-
-body.rtl .page-content .main-content ul li {
-  padding-left: 0;
-  padding-right: 24px;
-}
-
-body.rtl .page-content .main-content ul li::before {
-  left: auto;
-  right: 0;
-}
-
-body.rtl .footer-brand {
-  direction: rtl;
-  text-align: right;
-}
 
 /* Hide Google Translate toolbar */
 .goog-te-banner-frame,
