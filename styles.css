@@ -1928,9 +1928,18 @@ a.practice-card:hover h3 {
     max-height: 500px;
   }
 
+  .nav-dropdown {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    min-width: 0;
+  }
+
   .dropdown-menu li a {
     padding: 8px 16px;
     font-size: 0.85rem;
+    white-space: normal;
   }
 
   .nav-cta {
