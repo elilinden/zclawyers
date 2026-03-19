@@ -206,7 +206,7 @@ button, input, select, textarea {
 }
 
 .nav-logo {
-  display: flex;
+  display: none;
   align-items: center;
 }
 
