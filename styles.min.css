@@ -1692,8 +1692,12 @@ a.practice-card:hover h3 {
   opacity: 0.8;
 }
 
+.latest-insights {
+  padding: 96px 0;
+}
+
 .faq-section-home {
-  padding: 96px 0 0;
+  padding: 96px 0;
 }
 
 .faq-section-home .related-resources-header {
@@ -2009,8 +2013,12 @@ a.practice-card:hover h3 {
     padding: 64px 0;
   }
 
+  .latest-insights {
+    padding: 64px 0;
+  }
+
   .faq-section-home {
-    padding: 64px 0 0;
+    padding: 64px 0;
   }
 
   /* Hero adjustments */
