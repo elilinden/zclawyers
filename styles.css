@@ -2372,6 +2372,10 @@ a.practice-card:hover h3 {
   color: var(--navy);
 }
 
+.section-light .text-gold {
+  color: var(--navy);
+}
+
 .section-light .stat-card {
   background: var(--white);
   border-color: var(--stone-dark);
