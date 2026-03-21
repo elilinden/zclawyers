@@ -530,6 +530,15 @@ body {
   padding: 0 24px 80px;
 }
 
+.hero-tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
 .hero-label {
   display: inline-block;
   font-size: 0.85rem;
@@ -541,6 +550,13 @@ body {
   padding: 8px 20px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 30px;
+}
+
+/* Accent italic for select heading words */
+.accent-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
 }
 
 .hero h1 {
@@ -650,17 +666,21 @@ body {
 }
 
 .trust-logo {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.42);
-  letter-spacing: 1px;
-  transition: color 0.3s;
+  display: flex;
+  align-items: center;
   text-decoration: none;
+  transition: opacity 0.3s;
+  opacity: 0.5;
+}
+
+.trust-logo img {
+  height: 28px;
+  width: auto;
+  filter: invert(1) grayscale(1);
 }
 
 .trust-logo:hover {
-  color: rgba(255, 255, 255, 0.72);
+  opacity: 0.85;
 }
 
 /* ===== SECTION LABELS ===== */
@@ -755,6 +775,61 @@ body {
   color: var(--gray-400);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* ===== WHY PARTNER ===== */
+.why-partner {
+  padding: 100px 0;
+  background: var(--navy);
+}
+
+.partner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.partner-grid .partner-card:nth-child(4),
+.partner-grid .partner-card:nth-child(5) {
+  /* Center last two cards in a 3-col layout */
+}
+
+.partner-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 36px 28px;
+  text-align: center;
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.partner-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+.partner-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 20px;
+  color: var(--white);
+}
+
+.partner-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.partner-card p {
+  color: var(--gray-400);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 /* ===== PRACTICE AREAS ===== */
@@ -1150,6 +1225,38 @@ a.team-card {
   font-size: 0.75rem;
   color: var(--gray-600);
   margin-top: 16px;
+}
+
+/* ===== PRACTICE AREA TAGS ===== */
+.practice-tags {
+  padding: 48px 0;
+  background: var(--navy-light);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.practice-tag {
+  display: inline-block;
+  padding: 10px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.practice-tag:hover {
+  border-color: var(--white);
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* ===== FOOTER ===== */
@@ -1830,6 +1937,10 @@ a.practice-card:hover h3 {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 968px) {
+  .partner-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .about-grid {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -1943,6 +2054,10 @@ a.practice-card:hover h3 {
 }
 
 @media (max-width: 768px) {
+  .partner-grid {
+    grid-template-columns: 1fr;
+  }
+
   .hero-badges {
     flex-direction: column;
     align-items: center;
