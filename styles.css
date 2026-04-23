@@ -1227,6 +1227,51 @@ a.team-card {
   margin-top: 16px;
 }
 
+.form-consent {
+  margin-top: 4px;
+}
+
+.form-consent .consent-label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--gray-600);
+  cursor: pointer;
+  font-weight: 400;
+  margin-bottom: 0;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.form-consent .consent-label input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
+.form-consent .consent-label a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.form-consent .consent-label a:hover {
+  color: var(--white);
+}
+
+.form-group.form-consent.error .consent-label {
+  color: #ef4444;
+}
+
+.form-group.form-consent.error input[type="checkbox"] {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
 /* ===== PRACTICE AREA TAGS ===== */
 .practice-tags {
   padding: 48px 0;

@@ -87,6 +87,7 @@ const formCopy = {
     sending: 'Sending...',
     required: 'Please complete this field.',
     invalidEmail: 'Please enter a valid email address.',
+    smsConsent: 'Please agree to receive text messages to continue.',
     genericError: 'Something went wrong. Please try again or call us directly.',
     caseReviewSuccessTitle: 'Thank You!',
     caseReviewSuccessBody: 'Your case review request has been submitted. We\'ll be in touch shortly.',
@@ -97,6 +98,7 @@ const formCopy = {
     sending: 'Enviando...',
     required: 'Por favor complete este campo.',
     invalidEmail: 'Por favor ingrese un correo electr\u00f3nico v\u00e1lido.',
+    smsConsent: 'Por favor acepte recibir mensajes de texto para continuar.',
     genericError: 'Algo sali\u00f3 mal. Intente de nuevo o ll\u00e1menos directamente.',
     caseReviewSuccessTitle: '\u00a1Gracias!',
     caseReviewSuccessBody: 'Su solicitud de revisi\u00f3n de caso fue enviada. Nos comunicaremos con usted pronto.',
@@ -161,6 +163,15 @@ function validateForm(form) {
     if (field.disabled || field.type === 'hidden') return;
 
     clearFieldError(field);
+
+    if (field.type === 'checkbox') {
+      if (field.hasAttribute('required') && !field.checked) {
+        const errorMessage = field.name === 'sms_consent' ? messages.smsConsent : messages.required;
+        showFieldError(field, errorMessage);
+        isValid = false;
+      }
+      return;
+    }
 
     const value = typeof field.value === 'string' ? field.value.trim() : '';
     const isRequired = field.hasAttribute('required');
