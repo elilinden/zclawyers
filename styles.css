@@ -11,7 +11,7 @@
   font-family: 'Playfair Display';
   font-style: normal;
   font-weight: 400 700;
-  font-display: swap;
+  font-display: optional;
   src: url('fonts/playfair-display.woff2') format('woff2');
 }
 
@@ -112,7 +112,7 @@ button, input, select, textarea {
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
   border: 2px solid transparent;
 }
 
@@ -278,7 +278,7 @@ button, input, select, textarea {
   opacity: 0;
   visibility: hidden;
   transform: translateX(-50%) translateY(8px);
-  transition: all 0.25s ease;
+  transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
   z-index: 100;
 }
@@ -304,7 +304,7 @@ button, input, select, textarea {
   font-size: 0.88rem;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.7);
-  transition: all 0.15s;
+  transition: color 0.15s, background 0.15s;
   white-space: nowrap;
 }
 
@@ -359,7 +359,7 @@ button, input, select, textarea {
   width: 24px;
   height: 2px;
   background: var(--white);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   border-radius: 2px;
 }
 
@@ -409,7 +409,7 @@ button, input, select, textarea {
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .lang-btn:hover {
@@ -445,7 +445,7 @@ button, input, select, textarea {
   opacity: 0;
   visibility: hidden;
   transform: translateY(6px);
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   z-index: 200;
 }
@@ -461,7 +461,7 @@ button, input, select, textarea {
   padding: 8px 18px;
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.7);
-  transition: all 0.15s;
+  transition: color 0.15s, background 0.15s;
   cursor: pointer;
 }
 
@@ -751,7 +751,7 @@ body {
   border-radius: 12px;
   padding: 32px 24px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
@@ -849,7 +849,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   padding: 36px 28px;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .practice-card:hover {
@@ -908,7 +908,7 @@ body {
   border-radius: 12px;
   padding: 36px 28px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
 .result-card {
@@ -992,7 +992,7 @@ a.team-card {
   background: var(--navy);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
 .team-card:hover {
@@ -1140,7 +1140,7 @@ a.team-card {
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: border-color 0.2s, color 0.2s;
 }
 
 .social-links a:hover {
@@ -1249,7 +1249,7 @@ a.team-card {
   font-size: 0.9rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
   text-decoration: none;
 }
 
@@ -1494,7 +1494,7 @@ a.team-card {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
   border-radius: 8px;
-  transition: all 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .sidebar-links a:hover,
@@ -1618,7 +1618,7 @@ a.practice-card:hover h3 {
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
 }
