@@ -1139,13 +1139,10 @@ a.team-card {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+  width: 34px;
+  height: 34px;
   color: var(--white);
-  background: rgba(255, 255, 255, 0.04);
-  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
 }
 
 .social-links img {
@@ -1155,9 +1152,7 @@ a.team-card {
 }
 
 .social-links a:hover {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: rgba(255, 255, 255, 0.08);
+  opacity: 0.9;
   transform: translateY(-2px);
 }
 
