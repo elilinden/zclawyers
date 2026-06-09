@@ -1131,21 +1131,34 @@ a.team-card {
 
 .social-links {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .social-links a {
-  padding: 8px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.social-links img {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
 }
 
 .social-links a:hover {
   border-color: var(--gold);
   color: var(--gold);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
 }
 
 /* ===== CONTACT FORM ===== */
