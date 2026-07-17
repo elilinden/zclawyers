@@ -230,6 +230,10 @@ document.querySelectorAll('form.contact-form').forEach(form => {
       }
 
       form.innerHTML = `<div style="text-align:center;padding:40px 20px;"><h3 style="margin-bottom:12px;">${messages.successTitle}</h3><p>${messages.successBody}</p></div>`;
+
+      if (!form.classList.contains('dsar-form')) {
+        window.dispatchEvent(new CustomEvent('zc:consultation-form-success'));
+      }
     } catch {
       if (btn) {
         btn.textContent = defaultButtonText;
